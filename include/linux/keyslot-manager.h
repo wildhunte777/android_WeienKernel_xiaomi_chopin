@@ -98,10 +98,7 @@ int keyslot_manager_derive_raw_secret(struct keyslot_manager *ksm,
 				      unsigned int wrapped_key_size,
 				      u8 *secret, unsigned int secret_size);
 
-static inline void ksm_flock(struct keyslot_manager *ksm, unsigned int flags)
-{
-
-}
+extern void ksm_flock(struct keyslot_manager *ksm, unsigned int flags);
 
 #endif /* CONFIG_BLK_INLINE_ENCRYPTION */
 
