@@ -49,8 +49,7 @@ static inline bool blk_crypto_endio(struct bio *bio)
 	return true;
 }
 
-static inline void blk_crypto_flock(struct keyslot_manager *ksm,
-				unsigned int flags) {}
+extern void blk_crypto_flock(struct keyslot_manager *ksm,unsigned int flags);
 
 #endif /* CONFIG_BLK_INLINE_ENCRYPTION */
 
