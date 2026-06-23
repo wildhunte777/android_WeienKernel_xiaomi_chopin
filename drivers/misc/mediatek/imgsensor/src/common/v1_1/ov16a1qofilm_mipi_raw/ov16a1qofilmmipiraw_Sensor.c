@@ -353,17 +353,17 @@ static void set_shutter(kal_uint32 shutter)
 #define FACTOR 992.0f
 static kal_uint32 digital_gain_calc(kal_uint16 aaa_gain)
 {
-	float real_dig_gain = 1.0f;//MIN Dgain
-	kal_uint32 reg_dig_gain = 1024;//1024 = 1x
+	kal_uint32 real_dig_gain_x1024; 
+	kal_uint32 reg_dig_gain;
 
-	real_dig_gain = aaa_gain / FACTOR;
+	real_dig_gain_x1024 = (kal_uint32)aaa_gain * 1024 / 992;
 
-	if (real_dig_gain > 15.99f)//Max digital gain
+	if (real_dig_gain_x1024 > 16374)
 	{
-		real_dig_gain = 15.99f;
+		real_dig_gain_x1024 = 16374;
 	}
 
-	reg_dig_gain = (kal_uint32)(real_dig_gain * 1024) << 6;
+	reg_dig_gain = real_dig_gain_x1024 << 6;
 
 	return reg_dig_gain;
 }
