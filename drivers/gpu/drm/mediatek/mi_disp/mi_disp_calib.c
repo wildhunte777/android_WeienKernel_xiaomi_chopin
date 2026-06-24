@@ -195,9 +195,10 @@ rc = panel_send_package_cmd_from_file(init_data.data, init_data.length, &gcmd);
 if (fp) {
     filp_close(fp, NULL);
     fp = NULL;
-}
+ }
 
 set_fs(fs);
 kfree(init_data.data);
 error:
 return calib_status;
+}
