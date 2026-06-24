@@ -41,7 +41,7 @@ static void print_name_offset(struct seq_file *m, void *sym,
 		SEQ_printf_at_AEE(m, "<%pK>", sym);
 	} else {
 		SEQ_printf_at_AEE(m, "%s", symname);
-#if CONFIG_TIMER_AEE_FULL_DUMP
+#ifdef CONFIG_TIMER_AEE_FULL_DUMP
 		if (timer && !strncmp(symname, "hrtimer_wakeup",
 		    strlen("hrtimer_wakeup"))) {
 			struct hrtimer_sleeper *t =
