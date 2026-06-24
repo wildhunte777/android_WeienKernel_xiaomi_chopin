@@ -160,39 +160,44 @@ int mi_read_initcode(void)
 		pr_info("filp_open(/mnt/vendor/persist/display/display_calib.mcr) success\n");
 	}
 	init_data.data = kzalloc(DATA_NUM, GFP_KERNEL);
-	while (vfs_read(fp, &ch[0], 1, &pos) > 0) {
+while (vfs_read(fp, &ch[0], 1, &pos) > 0) {
 
-		if (ch_check(ch[0])) {
-			continue;
-		}
-		count = vfs_read(fp, &ch[1], 1, &pos);
-		pr_debug("panel_send_cmds:count = %ld pos = %ld ch[1] = %c\n", count, pos, ch[1]);
-		if (ch_check(ch[1])) {
-			continue;
-		}
-		if (i < DATA_NUM)
-			kstrtou8(ch, 16, &init_data.data[i]);
-		else{
-			pr_err("panel_send_cmds:cmd num over DATA_NUM = %d\n", i);
-			break;
-		}
+    if (ch_check(ch[0])) {
+        continue;
+    }
 
-		i++;
-	}
-	init_data.length = i;
-	pr_info("panel_send_cmds: begin data:%d end data:%d init_data.length = %d\n", init_data.data[0], init_data.data[i-1], init_data.length);
+    count = vfs_read(fp, &ch[1], 1, &pos);
+    pr_debug("panel_send_cmds:count = %ld pos = %ld ch[1] = %c\n", count, pos, ch[1]);
 
-	rc = panel_send_package_cmd_from_file(init_data.data, init_data.length, &gcmd);
+    if (ch_check(ch[1])) {
+        continue;
+    }
 
+    if (i >= DATA_NUM) {
+        pr_err("panel_send_cmds: cmd num over DATA_NUM = %d\n", i);
+        break;
+    }
 
-	if (fp) {
-		filp_close(fp, NULL);
-		fp = NULL;
-	}
-
-	set_fs(fs);
-	kfree(init_data.data);
-error:
-	return calib_status;
+    int ret = kstrtou8(ch, 16, &init_data.data[i]);
+    if (ret) {
+        pr_warn("mi_disp: failed to parse initcode data at index %d\n", i);
+        init_data.data[i] = 0;
+    }
+    i++;
 }
 
+init_data.length = i;
+pr_info("panel_send_cmds: begin data:%d end data:%d init_data.length = %d\n",
+        init_data.data[0], init_data.data[i-1], init_data.length);
+
+rc = panel_send_package_cmd_from_file(init_data.data, init_data.length, &gcmd);
+
+if (fp) {
+    filp_close(fp, NULL);
+    fp = NULL;
+}
+
+set_fs(fs);
+kfree(init_data.data);
+error:
+return calib_status;
