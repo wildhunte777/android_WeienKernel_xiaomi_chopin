@@ -57,8 +57,8 @@ static void
 print_timer(struct seq_file *m, struct hrtimer *taddr, struct hrtimer *timer,
 	    int idx, u64 now)
 {
-#if CONFIG_TIMER_AEE_FULL_DUMP
-#ifdef CONFIG_TIMER_STATS
+#ifdef CONFIG_TIMER_AEE_FULL_DUMP
+#if CONFIG_TIMER_STATS
 	char tmp[TASK_COMM_LEN + 1];
 #endif
 	SEQ_printf_at_AEE(m, " #%d: ", idx);
