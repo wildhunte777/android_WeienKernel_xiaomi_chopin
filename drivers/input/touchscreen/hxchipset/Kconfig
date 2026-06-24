@@ -122,16 +122,16 @@ config TOUCHSCREEN_HIMAX_INSPECT
 		This enables support for HIMAX inspect function.
 
 config TOUCHSCREEN_HIMAX_EMBEDDED_FIRMWARE
-	bool "HIMAX embedded firmware function"
+	    bool "HIMAX embedded firmware function"
 		depends on TOUCHSCREEN_HIMAX_INCELL || TOUCHSCREEN_HIMAX_ONCELL
 		help
 		This enables built-in FW inside kernel as binary array
 
 config HMX_DB
-	bool "HIMAX driver test over Dragon Board"
-	depends on TOUCHSCREEN_HIMAX_COMMON
-	help
-	  This enables support for HIMAX driver test over Dragon Board.
+	    bool "HIMAX driver test over Dragon Board"
+	    depends on TOUCHSCREEN_HIMAX_COMMON
+	    help
+	    This enables support for HIMAX driver test over Dragon Board.
 
 config HIMAX_SUPPORT_KERNEL_419
         bool "HIMAX support kernel 4.19"
