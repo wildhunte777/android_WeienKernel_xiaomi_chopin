@@ -70,7 +70,7 @@ static const char * const mt6885_sgen_rate_str[] = {
 	"192k"
 };
 
-static const int const mt6885_sgen_rate_idx[] = {
+static const int mt6885_sgen_rate_idx[] = {
 	0, 1, 2, 4,
 	5, 6, 8, 9,
 	10, 11, 12, 13,
