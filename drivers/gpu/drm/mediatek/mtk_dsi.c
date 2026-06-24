@@ -5830,7 +5830,7 @@ skip_change_mipi:
 static void mtk_dsi_dy_fps_cmdq_cb(struct cmdq_cb_data data)
 {
 	struct mtk_cmdq_cb_data *cb_data = data.data;
-	struct mtk_drm_crtc *mtk_crtc; = NULL;
+	struct mtk_drm_crtc *mtk_crtc = NULL;
 	struct mtk_ddp_comp *comp;
 	struct mtk_dsi *dsi;
 	int vrefresh = 0;
