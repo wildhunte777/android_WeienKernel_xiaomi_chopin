@@ -1212,7 +1212,7 @@ static int usbpd_pm_fc2_charge_algo(struct usbpd_pm *pdpm)
 
 	steps = min(sw_ctrl_steps, hw_ctrl_steps);
 
-	if (pdpm->cp.ibat_curr > 0 && ibus_total > 0 && steps > 0 || effective_fcc_val == 0) {
+	if ((pdpm->cp.ibat_curr > 0 && ibus_total > 0 && steps > 0) || effective_fcc_val == 0) {
 		fcc_ibatt_diff = (pdpm->cp.ibat_curr > curr_fcc_limit) ? (pdpm->cp.ibat_curr - curr_fcc_limit) : (curr_fcc_limit - pdpm->cp.ibat_curr);
 		icl_ibus_diff = (ibus_total > curr_ibus_limit) ? (ibus_total - curr_ibus_limit) : (curr_ibus_limit - ibus_total);
 		if (fcc_ibatt_diff > 1000 && icl_ibus_diff > 500)
