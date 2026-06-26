@@ -966,8 +966,8 @@ static int32_t __download_patch_to_emi(
 	hw_ver = p_patch_hdr->hw_ver;
 	sw_ver = p_patch_hdr->sw_ver;
 	subsys_id = p_patch_hdr->subsys_id;
-	strncpy(datetime, p_patch_hdr->date_time, sizeof(p_patch_hdr->date_time));
-	datetime[sizeof(p_patch_hdr->date_time) - 2] = '\0'; // 14 bytes actually
+	strncpy(datetime, p_patch_hdr->date_time, sizeof(datetime) - 1);
+	datetime[sizeof(p_patch_hdr->date_time) - 1] = '\0'; // 14 bytes actually
 	BTMTK_INFO(
 		"[Patch]BTime=%s,HVer=0x%04x,SVer=0x%04x,Plat=%c%c%c%c,Addr=0x%02x%02x%02x%02x,Type=%x",
 		datetime,
