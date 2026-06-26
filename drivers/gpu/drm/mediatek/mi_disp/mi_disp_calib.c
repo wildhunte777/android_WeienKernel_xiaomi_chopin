@@ -177,14 +177,13 @@ while (vfs_read(fp, &ch[0], 1, &pos) > 0) {
         pr_err("panel_send_cmds: cmd num over DATA_NUM = %d\n", i);
         break;
     }
-
-    int ret = kstrtou8(ch, 16, &init_data.data[i]);
-    if (ret) {
-        pr_warn("mi_disp: failed to parse initcode data at index %d\n", i);
-        init_data.data[i] = 0;
-    }
-    i++;
+     int ret; 
+     ret = kstrtou8(ch, 16, &init_data.data[i]);
+     if (ret) {
+         pr_warn("mi_disp: failed to parse initcode data at index %d\n", i);
+         init_data.data[i] = 0;
 }
+i++;
 
 init_data.length = i;
 pr_info("panel_send_cmds: begin data:%d end data:%d init_data.length = %d\n",
