@@ -1673,7 +1673,6 @@ irqreturn_t MTK_M4U_isr_sec(int irq, void *dev_id)
 
 	ret = IRQ_HANDLED;
 
-out:
 	spin_lock_irqsave(&data->reg_lock, flags);
 	data->isr_ref--;
 	spin_unlock_irqrestore(&data->reg_lock, flags);
