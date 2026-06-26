@@ -111,12 +111,13 @@ static int mtk_eint_flip_edge(struct mtk_eint *eint, int hwirq)
 
 static void mtk_eint_mask(struct irq_data *d)
 {
+    u32 mask;
 	struct mtk_eint *eint = irq_data_get_irq_chip_data(d);
 
 	if (!eint)
 		return;
 
-	u32 mask = BIT(d->hwirq & 0x1f);
+	mask = BIT(d->hwirq & 0x1f);
 	void __iomem *reg = mtk_eint_get_offset(eint, d->hwirq,
 						eint->regs->mask_set);
 
