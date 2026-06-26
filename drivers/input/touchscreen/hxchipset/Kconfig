@@ -24,7 +24,6 @@ config TOUCHSCREEN_HIMAX_INCELL
 		depends on TOUCHSCREEN_HIMAX_COMMON
 		help
 		This enables support for HIMAX CHIPSET of in-cell function.
-
 endchoice
 
 # ***************** On-cell Start *****************
