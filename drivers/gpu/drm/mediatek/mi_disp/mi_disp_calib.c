@@ -132,72 +132,81 @@ static int ch_check(char ch)
 
 int mi_read_initcode(void)
 {
-	int calib_status = 0;
-	struct file *fp = NULL;
-	mm_segment_t fs;
-	loff_t pos = 0;
-	int i = 0;
-	char ch[3] = {0};
-	struct buf_data init_data;
-	int count = 0;
-	int rc = 0;
+    int ret; 
+    int calib_status = 0;
+    struct file *fp = NULL;
+    mm_segment_t fs;
+    loff_t pos = 0;
+    int i = 0;
+    char ch[3] = {0};
+    struct buf_data init_data;
+    int count = 0;
+    int rc = 0;
+	
+    fs = get_fs();
+    set_fs(KERNEL_DS);
 
-	fs = get_fs();
-	set_fs(KERNEL_DS);
-
-	fp = filp_open("/mnt/vendor/persist/display/display_calib.mcr", O_RDWR, 0644);
-	if (IS_ERR_OR_NULL(fp)) {
-		calib_status = 1;
-		fp = filp_open("/mnt/vendor/persist/display/display_calib_default.mcr", O_RDWR, 0644);
-		if (IS_ERR_OR_NULL(fp)) {
-			rc = PTR_ERR(fp);
-			pr_err("filp_open(/mnt/vendor/persist/display/display_calib_default.mcr) fail, rc = %d\n", rc);
-			goto error;
-		} else {
-			pr_err("filp_open(/mnt/vendor/persist/display/display_calib_default.mcr) success\n");
-		}
-	} else {
-		pr_info("filp_open(/mnt/vendor/persist/display/display_calib.mcr) success\n");
-	}
-	init_data.data = kzalloc(DATA_NUM, GFP_KERNEL);
-while (vfs_read(fp, &ch[0], 1, &pos) > 0) {
-
-    if (ch_check(ch[0])) {
-        continue;
+    fp = filp_open("/mnt/vendor/persist/display/display_calib.mcr", O_RDWR, 0644);
+    if (IS_ERR_OR_NULL(fp)) {
+        calib_status = 1;
+        fp = filp_open("/mnt/vendor/persist/display/display_calib_default.mcr", O_RDWR, 0644);
+        if (IS_ERR_OR_NULL(fp)) {
+            rc = PTR_ERR(fp);
+            pr_err("filp_open(/mnt/vendor/persist/display/display_calib_default.mcr) fail, rc = %d\n", rc);
+            goto error;
+        } else {
+            pr_err("filp_open(/mnt/vendor/persist/display/display_calib_default.mcr) success\n");
+        }
+    } else {
+        pr_info("filp_open(/mnt/vendor/persist/display/display_calib.mcr) success\n");
     }
 
-    count = vfs_read(fp, &ch[1], 1, &pos);
-    pr_debug("panel_send_cmds:count = %ld pos = %ld ch[1] = %c\n", count, pos, ch[1]);
-
-    if (ch_check(ch[1])) {
-        continue;
+    init_data.data = kzalloc(DATA_NUM, GFP_KERNEL);
+    if (!init_data.data) {
+        pr_err("Failed to allocate memory for init_data\n");
+        calib_status = -ENOMEM;
+        goto error; 
     }
+    while (vfs_read(fp, &ch[0], 1, &pos) > 0) {
+        if (ch_check(ch[0])) {
+            continue;
+        }
 
-    if (i >= DATA_NUM) {
-        pr_err("panel_send_cmds: cmd num over DATA_NUM = %d\n", i);
-        break;
-    }
-     int ret; 
-     ret = kstrtou8(ch, 16, &init_data.data[i]);
-     if (ret) {
-         pr_warn("mi_disp: failed to parse initcode data at index %d\n", i);
-         init_data.data[i] = 0;
-}
-i++;
+        count = vfs_read(fp, &ch[1], 1, &pos);
+        pr_debug("panel_send_cmds:count = %ld pos = %ld ch[1] = %c\n", count, pos, ch[1]);
 
-init_data.length = i;
-pr_info("panel_send_cmds: begin data:%d end data:%d init_data.length = %d\n",
-        init_data.data[0], init_data.data[i-1], init_data.length);
+        if (ch_check(ch[1])) {
+            continue;
+        }
 
-rc = panel_send_package_cmd_from_file(init_data.data, init_data.length, &gcmd);
+        if (i >= DATA_NUM) {
+            pr_err("panel_send_cmds: cmd num over DATA_NUM = %d\n", i);
+            break;
+        }
 
-if (fp) {
-    filp_close(fp, NULL);
-    fp = NULL;
- }
+        ret = kstrtou8(ch, 16, &init_data.data[i]);
+        if (ret) {
+            pr_warn("mi_disp: failed to parse initcode data at index %d\n", i);
+            init_data.data[i] = 0;
+        } 
 
-set_fs(fs);
-kfree(init_data.data);
+        i++;
+    } 
+
+    init_data.length = i;
+    pr_info("panel_send_cmds: begin data:%d end data:%d init_data.length = %d\n",
+            init_data.data[0], init_data.data[i-1], init_data.length);
+
+    rc = panel_send_package_cmd_from_file(init_data.data, init_data.length, &gcmd);
+
 error:
-return calib_status;
+    if (fp) {
+        filp_close(fp, NULL);
+        fp = NULL;
+    }
+
+    set_fs(fs);
+    kfree(init_data.data);
+
+    return calib_status;
 }
