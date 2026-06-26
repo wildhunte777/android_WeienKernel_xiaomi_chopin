@@ -11,6 +11,7 @@
  * GNU General Public License for more details.
  */
 
+#include <drm/drm_crtc.h>
 #include <linux/clk.h>
 #include <linux/of.h>
 #include <linux/of_address.h>
