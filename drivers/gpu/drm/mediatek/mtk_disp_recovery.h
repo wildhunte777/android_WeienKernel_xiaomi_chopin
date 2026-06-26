@@ -16,6 +16,7 @@
 
 #define ESD_CHECK_NUM 3
 
+struct drm_crtc; 
 struct mtk_drm_private;
 
 enum mtk_esd_chk_mode {
