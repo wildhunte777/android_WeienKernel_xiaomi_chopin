@@ -1355,13 +1355,14 @@ static int mtk_switch_charging_run(struct charger_manager *info)
 	}
 
 	do {
+		chr_err("%s_2 [%d] %d\n", __func__, swchgalg->state,
+			info->pd_type);
 		switch (swchgalg->state) {
-			chr_err("%s_2 [%d] %d\n", __func__, swchgalg->state,
-				info->pd_type);
 		case CHR_CC:
 #ifdef CONFIG_BQ2597X_CHARGE_PUMP
 		case CHR_XM_QC20:
 #endif
+
 			ret = mtk_switch_chr_cc(info);
 			break;
 
