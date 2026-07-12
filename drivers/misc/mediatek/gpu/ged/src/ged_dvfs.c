@@ -988,6 +988,7 @@ static void ged_dvfs_trigger_fb_dvfs(void)
 static int ged_dvfs_fb_gpu_dvfs(int t_gpu, int t_gpu_target,
 	int target_fps_margin, unsigned int force_fallback)
 {
+	int i32NewFreqID;
 	int i, i32MaxLevel, gpu_freq_tar, ui32NewFreqID = 0;
 	int ret_freq = -1;
 	static int gpu_freq_pre = -1;
@@ -1017,7 +1018,6 @@ static int ged_dvfs_fb_gpu_dvfs(int t_gpu, int t_gpu_target,
 #ifdef GED_CONFIGURE_LOADING_BASE_DVFS_STEP
 		if (force_fallback == 1) {
 			g_lb_down_count = 1;
-			int i32NewFreqID =
 			(int) mt_gpufreq_get_cur_freq_index();
 
 			if (dvfs_step_mode == 0)
