@@ -954,14 +954,15 @@ out:
 #ifdef MTK_ION_MAPPING_PERF_DEBUG
 	end = sched_clock();
 	if (buffer->sg_table &&
-	    (buffer->sg_table->nents > 10 &&
+	    ((buffer->sg_table->nents > 10) &&
 #if BITS_PER_LONG == 32
-	    (div_u64((end - start),
-	     buffer->sg_table->nents > 500000ULL)) ||
+        (div_u64((end - start),
+        buffer->sg_table->nents > 500000ULL))) ||
 #else
-	    ((end - start) /
-	     buffer->sg_table->nents > 500000ULL) ||
+        ((end - start) /
+        buffer->sg_table->nents > 500000ULL)) ||
 #endif
+
 	    (end - start > 50000000ULL)))
 		IONMSG("warn: p(%d-%d) phys time:%lluns n:%u s:%zu\n",
 		       buffer_info->module_id,
@@ -2182,7 +2183,7 @@ long ion_mm_ioctl(struct ion_client *client, unsigned int cmd,
 			param.get_phys_param.phy_addr = phy_addr;
 
 			mutex_unlock(&buffer->lock);
-		} else if (buffer_type == ION_HEAP_TYPE_MULTIMEDIA_SEC) {
+		} else if (buffer_type == (enum ion_heap_type)ION_HEAP_TYPE_MULTIMEDIA_SEC) {
 			struct ion_heap *sec_heap;
 			ion_phys_addr_t phy_addr;
 			size_t len;
