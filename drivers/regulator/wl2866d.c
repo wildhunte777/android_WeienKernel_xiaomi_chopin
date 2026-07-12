@@ -622,9 +622,14 @@ static int wl2866d_driver_register(int index, struct regmap *regmap)
 	}
 
 	wl2866d_dev.pdevice->driver_data = regmap;
-	(void)sysfs_create_file(&(wl2866d_dev.pdevice->kobj), &dev_attr_status.attr);
-	(void)sysfs_create_file(&(wl2866d_dev.pdevice->kobj), &dev_attr_info.attr);
-	(void)sysfs_create_file(&(wl2866d_dev.pdevice->kobj), &dev_attr_enable.attr);
+    if (sysfs_create_file(&(wl2866d_dev.pdevice->kobj), &dev_attr_status.attr))
+    pr_err("create status sysfs failed\n");
+
+    if (sysfs_create_file(&(wl2866d_dev.pdevice->kobj), &dev_attr_info.attr))
+    pr_err("create info sysfs failed\n");
+
+    if (sysfs_create_file(&(wl2866d_dev.pdevice->kobj), &dev_attr_enable.attr))
+    pr_err("create enable sysfs failed\n");
 
 	return 0;
 }
