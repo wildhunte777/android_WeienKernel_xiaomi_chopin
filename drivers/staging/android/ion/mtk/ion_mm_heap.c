@@ -957,10 +957,10 @@ out:
 	    ((buffer->sg_table->nents > 10) &&
 #if BITS_PER_LONG == 32
         (div_u64((end - start),
-        buffer->sg_table->nents > 500000ULL))) ||
+        buffer->sg_table->nents > 500000ULL)) ||
 #else
         ((end - start) /
-        buffer->sg_table->nents > 500000ULL)) ||
+        buffer->sg_table->nents > 500000ULL) ||
 #endif
 
 	    (end - start > 50000000ULL)))
