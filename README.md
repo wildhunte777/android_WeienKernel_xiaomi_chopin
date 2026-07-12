@@ -6,9 +6,9 @@ This is The Weien Kernel Project side line for RedmiNote10Pro(Chopin)MIUI14 Andr
 这是TheWeienKernelProject支线版本给note10pro chopin miui14 安卓13 集成杂鱼 susfs kvm
 
 # How Install 安装指南
-1.下载releases提供的ak3包 Install AnyKernel3
+1.下载ak3包  Download AnyKernel3
 2.在Recovery里面卡刷刷入 Recovery sideload 
-3.等待启动   Boot Phone         
+3.等待启动 Boot Phone         
 
 ## KERNEL WARNING ##
 > EFI ACPI无法使用
@@ -21,7 +21,7 @@ cd android_WeienKernel_xiaomi_chopin
 使用内核集成脚本 Use Kernel Setup Scripts
 ```
 ```
-make vendor/chopin_defconfig vendor/addon.config
+make vendor/chopin_user_defconfig vendor/addon.config
 ```
 ```
 make -j$(nproc) Image | tee ~/build.log
@@ -42,4 +42,5 @@ make -j$(nproc) Image | tee ~/build.log
 | **BPF** | ✅ |
 | **ResukiSU** | ✅ |
 | **sufus** | ✅ |
+
 *Testing测试中代表无法使用但已集成
