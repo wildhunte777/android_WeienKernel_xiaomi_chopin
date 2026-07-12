@@ -119,7 +119,7 @@ void ion_client_buf_add(struct ion_heap *heap, struct ion_client *client,
 	u64 total_size;
 
 	client->hnd_cnt++;
-	if (heap->type == ION_HEAP_TYPE_MULTIMEDIA_SEC)
+	if (heap->type == (enum ion_heap_type)ION_HEAP_TYPE_MULTIMEDIA_SEC)
 		total_size =
 		atomic64_add_return(size, &client->total_size[SECURE_HEAP]);
 	else if (heap->type == ION_HEAP_TYPE_SYSTEM)
@@ -159,7 +159,7 @@ void ion_client_buf_sub(struct ion_heap *heap, struct ion_client *client,
 	long long total_size;
 
 	client->hnd_cnt--;
-	if (heap->type == ION_HEAP_TYPE_MULTIMEDIA_SEC) {
+	if (heap->type == (enum ion_heap_type)ION_HEAP_TYPE_MULTIMEDIA_SEC) {
 		total_size =
 		atomic64_sub_return(size, &client->total_size[SECURE_HEAP]);
 		if (total_size < 0) {
@@ -204,7 +204,7 @@ void ion_client_buf_sub(struct ion_heap *heap, struct ion_client *client,
 u64 ion_client_buf_dump(struct ion_heap *heap, struct ion_client *client)
 {
 #ifdef ION_RECORD_TOTAL_SIZE_SUPPORT
-	if (heap->type == ION_HEAP_TYPE_MULTIMEDIA_SEC)
+	if (heap->type == (enum ion_heap_type)ION_HEAP_TYPE_MULTIMEDIA_SEC)
 		return (u64)(atomic64_read(&client->total_size[SECURE_HEAP]));
 	else if (heap->type == ION_HEAP_TYPE_SYSTEM)
 		return (u64)(atomic64_read(&client->total_size[SYSTEM_HEAP]));
@@ -357,7 +357,7 @@ static struct ion_buffer *ion_buffer_create(struct ion_heap *heap,
 	INIT_LIST_HEAD(&buffer->attachments);
 #endif
 	mutex_init(&buffer->lock);
-	if (heap->type == ION_HEAP_TYPE_MULTIMEDIA_SEC)
+	if (heap->type == (enum ion_heap_type)ION_HEAP_TYPE_MULTIMEDIA_SEC)
 		goto exit;
 	/*
 	 * this will set up dma addresses for the sglist -- it is not
@@ -1445,7 +1445,6 @@ static struct sg_table *ion_map_dma_buf(struct dma_buf_attachment *attachment,
 		if (clone_sg_table(buffer->sg_table, table))
 			return ERR_PTR(-EINVAL);
 	} else {
-retry:
 		mutex_lock(&buffer->lock);
 		if (buffer->heap->ops->dma_buf_config) {
 			ret = buffer->heap->ops->dma_buf_config(
@@ -2161,8 +2160,8 @@ static size_t ion_debug_heap_total(struct ion_client *client,
 			/* for exception dump ion_mm_heap info */
 		    (id == ION_HEAP_TYPE_MULTIMEDIA &&
 		     (type == ION_HEAP_TYPE_SYSTEM ||
-		      type == ION_HEAP_TYPE_MULTIMEDIA ||
-		      type == ION_HEAP_TYPE_MULTIMEDIA_SEC))) {
+		      type == (enum ion_heap_type)ION_HEAP_TYPE_MULTIMEDIA ||
+              type == (enum ion_heap_type)ION_HEAP_TYPE_MULTIMEDIA_SEC))) {
 			client->dbg_hnd_cnt++;
 			size += handle->buffer->size;
 		}
